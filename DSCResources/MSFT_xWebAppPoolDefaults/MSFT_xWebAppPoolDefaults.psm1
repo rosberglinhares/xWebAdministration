@@ -1,3 +1,7 @@
+# Suppressing this rule because Write-Verbose is called in Helper functions
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSDSCUseVerboseMessageInDSCResource', '')]
+param ()
+
 # Load the Helper Module
 Import-Module -Name "$PSScriptRoot\..\Helper.psm1"
 
@@ -13,13 +17,12 @@ data LocalizedData
 '@
 }
 
+<#
+        .SYNOPSIS
+        This will return a hashtable of results 
+#>
 function Get-TargetResource
 {
-    <#
-    .SYNOPSIS
-        This will return a hashtable of results 
-    #>
-
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -39,14 +42,12 @@ function Get-TargetResource
     }
 }
 
-
+<#
+        .SYNOPSIS
+        This will set the desired state
+#>
 function Set-TargetResource
 {
-    <#
-    .SYNOPSIS
-        This will set the desired state
-    #>
-
     [CmdletBinding()]
     param
     (    
@@ -67,14 +68,13 @@ function Set-TargetResource
     Set-Value -Path 'processModel' -Name 'identityType' -NewValue $IdentityType
 }
 
-function Test-TargetResource
-{
-    <#
+<#
     .SYNOPSIS
         This tests the desired state. If the state is not correct it will return $false.
         If the state is correct it will return $true
-    #>
-    
+#>
+function Test-TargetResource
+{
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -114,6 +114,7 @@ function Test-TargetResource
 function Confirm-Value
 {
     [CmdletBinding()]
+    [OutputType([System.Boolean])]
     param
     (  
         [String] $Path,
@@ -123,7 +124,7 @@ function Confirm-Value
         [String] $NewValue
     )
     
-    if (-not($NewValue))
+    if (-not $NewValue)
     {
         # if no new value was specified, we assume this value is okay.
         return $true
@@ -137,7 +138,7 @@ function Confirm-Value
     else
     {
         $relPath = $Path + '/' + $Name
-        Write-Verbose($LocalizedData.ValueOk -f $relPath,$NewValue);
+        Write-Verbose($LocalizedData.ValueOk -f $relPath, $NewValue);
         return $true
     }
 }
@@ -155,7 +156,7 @@ function Set-Value
     )
 
     # if the variable doesn't exist, the user doesn't want to change this value
-    if (-not($NewValue))
+    if (-not $NewValue)
     {
         return
     }
@@ -176,15 +177,13 @@ function Set-Value
         
         $relPath = $Path + '/' + $Name
         Write-Verbose($LocalizedData.SettingValue -f $relPath,$NewValue);
-
     }
-
 }
 
 function Get-Value
 {
-
     [CmdletBinding()]
+    [OutputType([PSObject])]
     param
     (  
         [String] $Path,
@@ -202,9 +201,7 @@ function Get-Value
                 -PSPath 'MACHINE/WEBROOT/APPHOST' `
                 -Filter "system.applicationHost/applicationPools/applicationPoolDefaults$Path" `
                 -Name $Name
-    
-    }
-
+        }
 }
 
 #endregion
