@@ -21,7 +21,7 @@ data LocalizedData
 #>
 function Get-TargetResource
 {
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSDSCUseVerboseMessageInDSCResource", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSDSCUseVerboseMessageInDSCResource", "")]
     [CmdletBinding()]
     [OutputType([Hashtable])]
     param
@@ -105,7 +105,7 @@ function Set-TargetResource
 #>
 function Test-TargetResource
 {
-	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSDSCUseVerboseMessageInDSCResource", "")]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSDSCUseVerboseMessageInDSCResource", "")]
     [CmdletBinding()]
     [OutputType([Boolean])]
     param
